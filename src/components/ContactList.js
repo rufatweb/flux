@@ -2,29 +2,31 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import BookActions from '../actions/bookActions';
+import ContactsActions from '../actions/contactActions';
 
-export class BookList extends React.Component{
+export class ContactList extends React.Component{
 
-    createBookRow(book){
+    createContactRow(contact, index){
+      
+        console.log(contact, index)
         return (
-            <tr key={book.book_id}>
-                <td> {book.book_id} </td>
-                <td> {book.title} </td>
-                <td> {book.author} </td>
+            
+            <tr key={index}>
+                <td> {contact.firstname} </td>
+                <td> {contact.lastname} </td>
             </tr>
         );
     }
 
     componentDidMount(){
-        BookActions.readBooks();
+        ContactsActions.readContacts();
     }
 
     render() {
-        
+       
         let content = '';
         
-        if(this.props.book.readState.pending){
+        if(this.props.contact.readState.pending){
             content = (
                 <div className="d-flex justify-content-center">
                     <div className="spinner-border" role="status">
@@ -35,43 +37,43 @@ export class BookList extends React.Component{
         }
         
 
-        if(this.props.book.readState.success){
+        if(this.props.contact.readState.success){
+           
             content = 
                 (<table className="table">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Title</th>
-                            <th>Author</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {this.props.book.bookList.map(this.createBookRow, this)}
+                       
+                        {this.props.contact.contactList.map(this.createContactRow, this)}
                     </tbody>    
                 </table>)
         }
 
-        if(this.props.book.readState.failure){
+        if(this.props.contact.readState.failure){
             content = 
             (
                 <div className="alert alert-danger" role="alert">
-                    Error while loading books!
+                    Error while loading contacts!
                 </div>
             )
         }
 
         return(
             <div>
-                <h1>Books</h1>
+                <h1>Contacts</h1>
                 {content}
             </div>
         );
     }
 }
 
-BookList.propTypes = {
-    book: PropTypes.object.isRequired
+ContactList.propTypes = {
+    contact: PropTypes.object.isRequired
 };
-
 
 

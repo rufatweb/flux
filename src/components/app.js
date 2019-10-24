@@ -5,8 +5,8 @@ import {Switch, Route} from 'react-router-dom';
 
 import {Header} from './header.js';
 import {Home} from './home.js';
-import {BookList} from '../components/BookList';
-import BookStore from '../stores/bookStore';
+import {ContactList} from '../components/ContactList';
+import ContactStore from '../stores/contactStore';
 
 
 export class App extends React.Component{
@@ -14,9 +14,18 @@ export class App extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            book:{
-                bookList: [],
+            contact:{
+                contactList: [],
                 readState:{
+                    pending:false,
+                    success:false,
+                    failure:false
+                },
+                error: ''
+            },
+            vehicle:{
+                vehicleList: [],
+                readState: {
                     pending:false,
                     success:false,
                     failure:false
@@ -32,21 +41,27 @@ export class App extends React.Component{
                 <Header />
                 <Switch>
                     <Route exact path='/' component={Home}/>
-                    <Route path='/books' render={(props) => (<BookList {...props} book={this.state.book} />)}/>
+                    <Route path='/contacts' render={(props) => (<ContactList {...props} contact={this.state.contact} />)}/>
                 </Switch>
             </div>
         );
     }
 
     componentDidMount(){
-        BookStore.addChangeListener(this._onBookChange.bind(this));
+        ContactStore.addChangeListener(this._onContactChange.bind(this));
+        VehicleStore.addChangeListener(this._onVehicleChange.bind(this));
     }
 
     componentWillUnmount(){
-        BookStore.removeChangeListener(this._onBookChange.bind(this));
+        ContactStore.removeChangeListener(this._onContactChange.bind(this));
+        VehicleStore.removeChangeListener(this._onContactChange.bind(this));
     }
 
-    _onBookChange(){
-        this.setState({book: BookStore.getAllBooks()});
+    _onContactChange(){
+        this.setState({contact: ContactStore.getAllContacts()});
+    }
+
+    _onVehicleChange(){
+        this.setState({vehicle: VehicleStore.getAllVehicles()});
     }
 }
